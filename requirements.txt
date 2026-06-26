@@ -1,0 +1,4 @@
+PyQt6>=6.6
+anthropic>=0.40
+pyttsx3>=2.90
+python-dotenv>=1.0

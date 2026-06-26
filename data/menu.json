@@ -1,0 +1,118 @@
+{
+  "currency": "KRW",
+  "categories": [
+    { "id": "burger", "name": "버거" },
+    { "id": "side", "name": "사이드" },
+    { "id": "drink", "name": "음료" }
+  ],
+  "items": [
+    {
+      "id": "whopper",
+      "name": "와퍼",
+      "category": "burger",
+      "price": 7100,
+      "description": "직화로 구운 두툼한 순쇠고기 패티에 신선한 야채를 더한 버거킹의 대표 메뉴",
+      "recommended": true,
+      "options": {
+        "combo": ["단품", "세트"]
+      },
+      "combo_extra": 2300
+    },
+    {
+      "id": "cheese_whopper",
+      "name": "치즈와퍼",
+      "category": "burger",
+      "price": 7600,
+      "description": "와퍼에 고소한 치즈를 더한 버거",
+      "options": { "combo": ["단품", "세트"] },
+      "combo_extra": 2300
+    },
+    {
+      "id": "bulgogi_whopper",
+      "name": "불고기와퍼",
+      "category": "burger",
+      "price": 7400,
+      "description": "달콤짭짤한 불고기 소스를 더한 와퍼",
+      "recommended": true,
+      "options": { "combo": ["단품", "세트"] },
+      "combo_extra": 2300
+    },
+    {
+      "id": "whopper_jr",
+      "name": "와퍼주니어",
+      "category": "burger",
+      "price": 4600,
+      "description": "와퍼의 작은 사이즈, 가볍게 즐기는 버거",
+      "options": { "combo": ["단품", "세트"] },
+      "combo_extra": 2300
+    },
+    {
+      "id": "shrimp_whopper",
+      "name": "통새우와퍼",
+      "category": "burger",
+      "price": 8200,
+      "description": "통새우 패티가 들어간 풍성한 와퍼",
+      "options": { "combo": ["단품", "세트"] },
+      "combo_extra": 2300
+    },
+    {
+      "id": "monster_whopper",
+      "name": "몬스터와퍼",
+      "category": "burger",
+      "price": 9800,
+      "description": "패티와 치즈, 베이컨을 가득 쌓은 푸짐한 버거",
+      "options": { "combo": ["단품", "세트"] },
+      "combo_extra": 2300
+    },
+    {
+      "id": "fries",
+      "name": "감자튀김",
+      "category": "side",
+      "price": 2500,
+      "description": "겉은 바삭 속은 촉촉한 프렌치프라이",
+      "recommended": true,
+      "options": { "size": ["미디엄", "라지"] },
+      "size_extra": { "미디엄": 0, "라지": 800 }
+    },
+    {
+      "id": "nuggets",
+      "name": "치킨너겟",
+      "category": "side",
+      "price": 3200,
+      "description": "겉바속촉 치킨너겟 (4조각)",
+      "options": {}
+    },
+    {
+      "id": "onion_rings",
+      "name": "어니언링",
+      "category": "side",
+      "price": 2800,
+      "description": "달콤한 양파를 튀긴 바삭한 어니언링",
+      "options": {}
+    },
+    {
+      "id": "coke",
+      "name": "코카콜라",
+      "category": "drink",
+      "price": 2200,
+      "description": "시원한 탄산음료",
+      "options": { "temp": ["차가움"] }
+    },
+    {
+      "id": "coke_zero",
+      "name": "코카콜라 제로",
+      "category": "drink",
+      "price": 2200,
+      "description": "제로 칼로리 콜라",
+      "options": { "temp": ["차가움"] }
+    },
+    {
+      "id": "sprite",
+      "name": "스프라이트",
+      "category": "drink",
+      "price": 2200,
+      "description": "상쾌한 레몬라임 탄산음료",
+      "options": { "temp": ["차가움"] }
+    }
+  ]
+}

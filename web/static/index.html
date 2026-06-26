@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>버거킹 접근성 키오스크</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-screen="start">
+  <!-- 세로형 키오스크 프레임 -->
+  <main id="kiosk" class="kiosk">
+
+    <!-- 접근성 툴바 (모든 화면 공통) -->
+    <header class="a11y-bar" role="toolbar" aria-label="접근성 설정">
+      <button class="a11y-btn" id="btn-contrast" aria-pressed="false">고대비</button>
+      <button class="a11y-btn" id="btn-font">글자 100%</button>
+      <button class="a11y-btn" id="btn-low" aria-pressed="false">낮은화면</button>
+      <button class="a11y-btn" id="btn-voice" aria-pressed="true">음성 ON</button>
+    </header>
+
+    <!-- F-1 시작 -->
+    <section class="screen" data-name="start">
+      <div class="center">
+        <h1 class="brand">BURGER KING<span>접근성 키오스크</span></h1>
+        <p class="subtitle">화면을 누르거나 말로 주문하세요</p>
+        <button class="primary big" data-go="order">주문 시작하기</button>
+      </div>
+    </section>
+
+    <!-- F-2/3 주문 -->
+    <section class="screen" data-name="order">
+      <h2 class="screen-title">무엇을 주문할까요?</h2>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="menu" role="tab">메뉴 보기</button>
+        <button class="tab" data-tab="chat" role="tab">말로 주문</button>
+      </div>
+
+      <div class="tab-panel" data-panel="menu">
+        <div class="cat-filter" id="cat-filter"></div>
+        <div class="menu-grid" id="menu-grid" aria-label="메뉴 목록"></div>
+      </div>
+
+      <div class="tab-panel hidden" data-panel="chat">
+        <p class="hint">예: "와퍼 세트 하나랑 콜라 주세요"</p>
+        <div class="chat-log" id="chat-log" aria-live="polite"></div>
+        <form class="chat-row" id="chat-form">
+          <input type="text" id="chat-input" placeholder="주문 내용을 입력하세요" autocomplete="off" />
+          <button type="submit" class="send">보내기</button>
+        </form>
+      </div>
+
+      <button class="primary bottom" data-go="cart">
+        장바구니 보기 (<span id="order-cart-count">0</span>)
+      </button>
+    </section>
+
+    <!-- F-4 장바구니 -->
+    <section class="screen" data-name="cart">
+      <h2 class="screen-title">장바구니</h2>
+      <div class="cart-list" id="cart-list"></div>
+      <div class="cart-total">총 <span id="cart-total">0</span>원</div>
+      <div class="row">
+        <button data-go="order">계속 주문</button>
+        <button class="primary" data-go="payment" id="btn-checkout">결제하기</button>
+      </div>
+    </section>
+
+    <!-- F-5 결제 -->
+    <section class="screen" data-name="payment">
+      <h2 class="screen-title">결제</h2>
+      <p class="pay-amount"><span id="pay-amount">0</span>원</p>
+      <p class="pay-status" id="pay-status">결제 수단을 선택하세요</p>
+      <button class="primary big pay-method" data-pay>카드로 결제</button>
+      <button class="big pay-method" data-pay>모바일로 결제</button>
+      <button data-go="cart">취소</button>
+    </section>
+
+    <!-- F-6 완료 -->
+    <section class="screen" data-name="done">
+      <div class="center">
+        <div class="check">✓</div>
+        <h2 class="screen-title">주문이 완료되었습니다</h2>
+        <p class="order-no">주문번호 <span id="order-no">-</span>번</p>
+        <button class="primary big" data-go="start">처음으로</button>
+      </div>
+    </section>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

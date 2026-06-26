@@ -1,0 +1,165 @@
+/* 버거킹 접근성 키오스크 — 세로형(포트레이트) */
+:root {
+  --bg: #fff6e9;
+  --fg: #3b1e0e;
+  --primary: #d62300;
+  --primary-fg: #ffffff;
+  --card: #ffffff;
+  --accent: #f5a623;
+  --muted: #7a6a5e;
+  --border: #e6d8c5;
+  --font-scale: 1;
+  --base: calc(20px * var(--font-scale));
+}
+
+/* 고대비 모드 */
+body.high-contrast {
+  --bg: #000000;
+  --fg: #ffffff;
+  --primary: #ffd400;
+  --primary-fg: #000000;
+  --card: #111111;
+  --accent: #00e5ff;
+  --muted: #dddddd;
+  --border: #555555;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #222;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
+/* 세로형 키오스크 프레임 540x960 */
+.kiosk {
+  width: 540px;
+  max-width: 100vw;
+  height: 960px;
+  max-height: 100vh;
+  margin: 0 auto;
+  background: var(--bg);
+  color: var(--fg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: var(--base);
+}
+
+/* 접근성 툴바 */
+.a11y-bar {
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  background: var(--card);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+}
+.a11y-btn {
+  flex: 1;
+  min-height: 48px;
+  font-size: calc(var(--base) * 0.7);
+  border: 2px solid var(--primary);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.a11y-btn[aria-pressed="true"] { background: var(--primary); color: var(--primary-fg); }
+
+/* 화면 전환 */
+.screen { display: none; flex-direction: column; flex: 1; padding: 20px; overflow-y: auto; }
+.screen.active { display: flex; }
+.center { margin: auto; text-align: center; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+
+/* 저위치(휠체어) 모드: 조작 영역을 하단으로 */
+body.low-position .screen.active { justify-content: flex-end; }
+
+.brand { font-size: calc(var(--base) * 2); color: var(--primary); font-weight: 900; line-height: 1.1; }
+.brand span { display: block; font-size: calc(var(--base) * 0.9); color: var(--fg); font-weight: 700; margin-top: 8px; }
+.subtitle { color: var(--muted); }
+.screen-title { font-size: calc(var(--base) * 1.4); color: var(--primary); text-align: center; margin: 6px 0 14px; }
+
+/* 버튼 공통 (큰 터치 타깃) */
+button {
+  font-family: inherit;
+  font-size: var(--base);
+  min-height: 64px;
+  border: 3px solid var(--primary);
+  background: var(--card);
+  color: var(--fg);
+  border-radius: 16px;
+  padding: 14px;
+  cursor: pointer;
+}
+button:focus-visible { outline: 5px solid var(--accent); outline-offset: 2px; }
+button:hover { background: var(--accent); color: var(--primary-fg); }
+button.primary { background: var(--primary); color: var(--primary-fg); font-weight: 800; }
+button.big { min-height: 88px; font-size: calc(var(--base) * 1.2); }
+button.bottom { margin-top: auto; }
+
+.row { display: flex; gap: 12px; margin-top: 12px; }
+.row > button { flex: 1; }
+
+/* 탭 */
+.tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.tab { flex: 1; min-height: 56px; }
+.tab.active { background: var(--primary); color: var(--primary-fg); }
+.tab-panel { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.hidden { display: none !important; }
+
+/* 카테고리 필터 */
+.cat-filter { display: flex; gap: 6px; margin-bottom: 10px; }
+.cat-filter button { min-height: 48px; font-size: calc(var(--base) * 0.8); flex: 1; }
+.cat-filter button.active { background: var(--accent); color: var(--primary-fg); }
+
+/* 메뉴 그리드 */
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; overflow-y: auto; padding-bottom: 8px; }
+.menu-card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: left;
+  display: flex; flex-direction: column; gap: 6px;
+  min-height: 120px;
+}
+.menu-card .name { font-weight: 800; font-size: var(--base); }
+.menu-card .price { color: var(--primary); font-weight: 700; }
+.menu-card .desc { font-size: calc(var(--base) * 0.7); color: var(--muted); }
+
+/* 대화형 주문 */
+.hint { color: var(--muted); font-size: calc(var(--base) * 0.8); margin: 4px 0; }
+.chat-log {
+  flex: 1; overflow-y: auto; background: var(--card);
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 12px; margin-bottom: 10px; min-height: 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.bubble { padding: 10px 14px; border-radius: 14px; max-width: 85%; line-height: 1.4; }
+.bubble.user { align-self: flex-end; background: var(--primary); color: var(--primary-fg); }
+.bubble.bot { align-self: flex-start; background: var(--accent); color: var(--primary-fg); }
+.chat-row { display: flex; gap: 8px; }
+.chat-row input { flex: 1; min-height: 64px; font-size: var(--base); border: 3px solid var(--primary); border-radius: 12px; padding: 0 14px; background: var(--card); color: var(--fg); }
+.chat-row .send { flex-shrink: 0; }
+
+/* 장바구니 */
+.cart-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.cart-line {
+  background: var(--card); border: 2px solid var(--border); border-radius: 12px;
+  padding: 12px; display: flex; align-items: center; gap: 10px;
+}
+.cart-line .info { flex: 1; }
+.cart-line .qty-btn { min-height: 48px; width: 48px; padding: 0; }
+.cart-total { text-align: right; font-size: calc(var(--base) * 1.3); font-weight: 800; color: var(--primary); margin: 12px 0; }
+
+/* 결제/완료 */
+.pay-amount { text-align: center; font-size: calc(var(--base) * 1.6); font-weight: 800; color: var(--primary); }
+.pay-status { text-align: center; color: var(--muted); min-height: 1.5em; }
+.pay-method { margin-bottom: 12px; }
+.check { font-size: calc(var(--base) * 3); color: var(--primary); }
+.order-no { font-size: calc(var(--base) * 1.2); }
+
+.empty { color: var(--muted); text-align: center; margin: auto; }
