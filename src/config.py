@@ -20,7 +20,7 @@ MENU_PATH = DATA_DIR / "menu.json"
 # LLM 설정
 LLM_MODE = os.getenv("KIOSK_LLM_MODE", "mock").strip().lower()  # mock | claude
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-CLAUDE_MODEL = "claude-opus-4-8"
+CLAUDE_MODEL = "claude-haiku-4-5"
 
 # 화면 (세로형 9:16)
 SCREEN_WIDTH = 540
