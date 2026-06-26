@@ -48,7 +48,7 @@ ORDER_SCHEMA = {
                 "properties": {
                     "menu_id": {"type": "string"},
                     "qty": {"type": "integer"},
-                    "options": {"type": "object", "additionalProperties": {"type": "string"}},
+                    "options": {"type": "object", "additionalProperties": False},
                 },
                 "required": ["menu_id", "qty"],
                 "additionalProperties": False,
