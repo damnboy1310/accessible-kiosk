@@ -1,4 +1,8 @@
 Flask>=3.0
-gunicorn>=21.2
 anthropic>=0.40
 python-dotenv>=1.0
+
+# WSGI 서버 — 플랫폼별 분기
+# gunicorn은 fcntl 의존(Unix 전용)이라 Windows 키오스크에서는 waitress 사용
+gunicorn>=21.2; sys_platform != "win32"
+waitress>=3.0; sys_platform == "win32"
