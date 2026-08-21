@@ -1,4 +1,4 @@
-/* 버거킹 접근성 키오스크 — 세로형(포트레이트) */
+/* 버거킹 접근성 키오스크 — 세로형(포트레이트) / 가로형(랜드스케이프) 전환 지원 */
 :root {
   --bg: #fff6e9;
   --fg: #3b1e0e;
@@ -15,6 +15,13 @@
   --u: min(calc(100vw / 540), calc(100vh / 960));
   --u: min(calc(100vw / 540), calc(100dvh / 960));
   --base: calc(20 * var(--u) * var(--font-scale));
+}
+
+/* 가로형(랜드스케이프): 960x540 기준 디자인.
+   data-orient는 app.js가 설정한다 (auto=화면 방향 따라감 / portrait / landscape) */
+:root[data-orient="landscape"] {
+  --u: min(calc(100vw / 960), calc(100vh / 540));
+  --u: min(calc(100vw / 960), calc(100dvh / 540));
 }
 
 /* 고대비 모드 */
@@ -53,10 +60,17 @@ body { display: flex; align-items: center; justify-content: center; }
   font-size: var(--base);
 }
 
-/* 가로 화면(개발용 브라우저)에서는 9:16 세로 프레임을 가운데 표시 */
+/* 레이아웃과 실제 화면 방향이 어긋날 때(수동 전환·개발용 브라우저)
+   프레임을 가운데 letterbox로 표시한다. 방향이 맞으면 화면 전체를 채운다. */
 @media (orientation: landscape) {
-  .kiosk {
+  :root[data-orient="portrait"] .kiosk {
     width: calc(100dvh * 9 / 16);
+    box-shadow: 0 0 calc(40 * var(--u)) rgba(0, 0, 0, 0.5);
+  }
+}
+@media (orientation: portrait) {
+  :root[data-orient="landscape"] .kiosk {
+    height: calc(100vw * 9 / 16);
     box-shadow: 0 0 calc(40 * var(--u)) rgba(0, 0, 0, 0.5);
   }
 }
@@ -73,7 +87,9 @@ body { display: flex; align-items: center; justify-content: center; }
 .a11y-btn {
   flex: 1;
   min-height: calc(48 * var(--u));
-  font-size: calc(var(--base) * 0.7);
+  font-size: calc(var(--base) * 0.62);
+  padding: 0 calc(4 * var(--u));
+  white-space: nowrap;
   border: calc(2 * var(--u)) solid var(--primary);
   background: var(--card);
   color: var(--fg);
@@ -176,3 +192,56 @@ button.bottom { margin-top: auto; }
 .order-no { font-size: calc(var(--base) * 1.2); }
 
 .empty { color: var(--muted); text-align: center; margin: auto; }
+
+/* ==========================================================================
+   가로형(랜드스케이프) 레이아웃
+   - 주문 화면을 2단으로: 왼쪽 메뉴/대화, 오른쪽 장바구니 상시 노출
+   - 시작·결제·완료 화면은 1단 전체 폭
+   ========================================================================== */
+:root[data-orient="landscape"] .kiosk {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+:root[data-orient="landscape"] .a11y-bar { grid-column: 1 / -1; }
+:root[data-orient="landscape"] .screen { min-height: 0; }
+
+/* 주문/장바구니 상태에서만 2단 — 두 화면을 동시에 노출 */
+:root[data-orient="landscape"] body[data-screen="order"] .kiosk,
+:root[data-orient="landscape"] body[data-screen="cart"] .kiosk {
+  grid-template-columns: 1fr calc(340 * var(--u));
+}
+:root[data-orient="landscape"] body[data-screen="order"] .screen[data-name="cart"],
+:root[data-orient="landscape"] body[data-screen="cart"] .screen[data-name="order"] {
+  display: flex;
+}
+
+/* 장바구니는 오른쪽 사이드 패널 */
+:root[data-orient="landscape"] .screen[data-name="cart"] {
+  border-left: calc(2 * var(--u)) solid var(--border);
+  background: var(--card);
+}
+/* 2단에서는 두 화면을 오가는 버튼이 불필요 */
+:root[data-orient="landscape"] .screen[data-name="order"] > [data-go="cart"],
+:root[data-orient="landscape"] .screen[data-name="cart"] .row > [data-go="order"] {
+  display: none;
+}
+
+/* 넓어진 만큼 메뉴는 4열 */
+:root[data-orient="landscape"] .menu-grid { grid-template-columns: repeat(4, 1fr); }
+
+/* 말풍선이 화면 폭만큼 늘어나지 않게 */
+:root[data-orient="landscape"] .bubble { max-width: calc(420 * var(--u)); }
+
+/* 1단 화면은 내용 폭을 제한해 가운데 정렬 */
+:root[data-orient="landscape"] .screen[data-name="payment"] { align-items: center; }
+:root[data-orient="landscape"] .screen[data-name="payment"] > * {
+  width: 100%;
+  max-width: calc(520 * var(--u));
+}
+
+/* 저위치(휠체어) 모드 — 2단에서 함께 보이는 패널에도 적용 */
+:root[data-orient="landscape"] body.low-position .screen[data-name="order"],
+:root[data-orient="landscape"] body.low-position .screen[data-name="cart"] {
+  justify-content: flex-end;
+}

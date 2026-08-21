@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-orient="portrait">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body data-screen="start">
-  <!-- 세로형 키오스크 프레임 -->
+  <!-- 키오스크 프레임 (세로/가로 레이아웃은 html[data-orient]로 전환) -->
   <main id="kiosk" class="kiosk">
 
     <!-- 접근성 툴바 (모든 화면 공통) -->
@@ -17,6 +17,7 @@
       <button class="a11y-btn" id="btn-font">글자 100%</button>
       <button class="a11y-btn" id="btn-low" aria-pressed="false">낮은화면</button>
       <button class="a11y-btn" id="btn-voice" aria-pressed="true">음성 ON</button>
+      <button class="a11y-btn" id="btn-orient" aria-pressed="false">화면 자동</button>
     </header>
 
     <!-- F-1 시작 -->

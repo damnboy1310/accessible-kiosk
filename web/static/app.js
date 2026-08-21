@@ -14,7 +14,7 @@ const App = {
   pendingRecommend: null, // 추천 후 확인 대기 중인 items
   autopilot: false,    // "결제까지" 자동 진행 중
   paying: false,       // 결제 처리 중복 방지
-  settings: { highContrast: false, fontScale: 1, lowPosition: false, voice: true },
+  settings: { highContrast: false, fontScale: 1, lowPosition: false, voice: true, orient: "auto" },
 };
 
 const AFFIRM = /(^|\s)(응|네|예|그래|좋아|좋아요|담아|담아줘|해줘|그걸로|오케이|콜|ok)($|\s|요|\.)/i;
@@ -30,6 +30,54 @@ function speak(text) {
     u.rate = 1.05;
     window.speechSynthesis.speak(u);
   } catch (e) { /* 미지원 브라우저 무시 */ }
+}
+
+/* ---------- 화면 방향(세로/가로) ----------
+ * 우선순위: URL 파라미터(?orient=) > localStorage > auto(화면 방향 자동 감지)
+ * CSS는 html[data-orient]에 들어가는 "실제 적용된" 방향만 본다.
+ */
+const ORIENT_MODES = ["auto", "portrait", "landscape"];
+const ORIENT_LABEL = { auto: "화면 자동", portrait: "화면 세로", landscape: "화면 가로" };
+const ORIENT_KEY = "kiosk.orient";
+const portraitMQ = window.matchMedia("(orientation: portrait)");
+
+function effectiveOrient() {
+  if (App.settings.orient !== "auto") return App.settings.orient;
+  return portraitMQ.matches ? "portrait" : "landscape";
+}
+
+function applyOrient() {
+  const eff = effectiveOrient();
+  document.documentElement.dataset.orient = eff;
+  const btn = document.getElementById("btn-orient");
+  if (!btn) return;
+  btn.textContent = ORIENT_LABEL[App.settings.orient];
+  btn.setAttribute("aria-pressed", String(App.settings.orient !== "auto"));
+  btn.title = `현재 ${eff === "portrait" ? "세로" : "가로"} 레이아웃`;
+}
+
+function setOrient(mode, announce = false) {
+  App.settings.orient = ORIENT_MODES.includes(mode) ? mode : "auto";
+  try { localStorage.setItem(ORIENT_KEY, App.settings.orient); } catch (e) { /* 사생활 보호 모드 */ }
+  applyOrient();
+  if (!announce) return;
+  const eff = effectiveOrient() === "portrait" ? "세로" : "가로";
+  speak(App.settings.orient === "auto"
+    ? `화면 방향 자동. 현재 ${eff} 화면입니다.`
+    : `화면을 ${eff}로 바꿨습니다.`);
+}
+
+function initOrient() {
+  let saved = null;
+  try { saved = localStorage.getItem(ORIENT_KEY); } catch (e) { /* 무시 */ }
+  const param = new URLSearchParams(location.search).get("orient");
+  setOrient(param || saved || "auto");
+
+  // auto일 때만 실제 화면 방향 변화를 따라간다
+  const onChange = () => { if (App.settings.orient === "auto") applyOrient(); };
+  if (portraitMQ.addEventListener) portraitMQ.addEventListener("change", onChange);
+  else portraitMQ.addListener(onChange);   // 구형 브라우저
+  window.addEventListener("resize", onChange);
 }
 
 /* ---------- 화면 전환 ---------- */
@@ -107,6 +155,8 @@ function cartAdd(id, qty = 1, options = {}) {
   const found = App.cart.find((l) => l.id === id && sameOptions(l.options, options));
   if (found) found.qty += qty;
   else App.cart.push({ id, qty, options });
+  // 가로 모드에서는 장바구니 패널이 상시 노출되므로 담는 즉시 갱신해야 한다
+  afterCartChange();
 }
 function cartRemove(id) { App.cart = App.cart.filter((l) => l.id !== id); }
 function cartUpdateQty(id, qty) {
@@ -422,7 +472,12 @@ async function init() {
     App.settings.voice = !App.settings.voice; applySettings();
     if (App.settings.voice) speak("음성 안내를 켰습니다.");
   };
+  document.getElementById("btn-orient").onclick = () => {
+    const i = ORIENT_MODES.indexOf(App.settings.orient);
+    setOrient(ORIENT_MODES[(i + 1) % ORIENT_MODES.length], true);
+  };
 
+  initOrient();
   applySettings();
   go("start");
 }
